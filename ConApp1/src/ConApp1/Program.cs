@@ -24,6 +24,14 @@ namespace ConApp1
             CloudTableClient ctClient = acc.CreateCloudTableClient();
             CloudTable cloudTable = ctClient.GetTableReference("myAwesomeTable");
 
+            // TODO: Create custom entities Implementing ITableEntity - much cleaner
+            var ent = new DynamicTableEntity(Guid.NewGuid().ToString(), DateTime.Now.Ticks.ToString());
+            ent.Properties.Add("FirstName", new EntityProperty("Ryan"));
+            ent.Properties.Add("LastName", new EntityProperty("Southgate"));
+
+            // Put in table
+            var tblResult = cloudTable.ExecuteAsync(TableOperation.Insert(ent)).Result;
+
             // TODO: Properly await (in a non-console app)
             bool created = cloudTable.CreateIfNotExistsAsync().Result;
 
