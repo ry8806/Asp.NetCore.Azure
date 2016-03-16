@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,13 @@ namespace ConApp1
             var connectionString = config["Azure:ConnectionString"];
 
             CloudStorageAccount acc = CloudStorageAccount.Parse(connectionString);
+
+            // Cloud Table Stuff
+            CloudTableClient ctClient = acc.CreateCloudTableClient();
+            CloudTable cloudTable = ctClient.GetTableReference("myAwesomeTable");
+
+            // TODO: Properly await (in a non-console app)
+            bool created = cloudTable.CreateIfNotExistsAsync().Result;
 
             Console.ReadLine();
         }
